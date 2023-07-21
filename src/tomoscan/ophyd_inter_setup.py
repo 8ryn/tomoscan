@@ -33,6 +33,7 @@ class MyDetector(SingleTrigger, AreaDetector):
         MyHDF5Plugin,
         "HDF1:",
         write_path_template="/out/%Y/%m/%d/",
+        read_path_template="/data/%Y/%m/%d/",  # Ensure this is the path from bluesky/docker container to output
     )
 
 
