@@ -20,6 +20,7 @@ dependencies = [
     "ipython",
     "databroker",
     "matplotlib",
+    "apstools",
 ] # Add project dependencies here, e.g. ["click", "numpy"]
 dynamic = ["version"]
 license.file = "LICENSE"

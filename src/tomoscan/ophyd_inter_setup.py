@@ -1,9 +1,12 @@
 # Designed to be used with iocs and simulators all running in docker compose
+# Useful info in https://bcda-aps.github.io/apstools/latest/examples/de_0_adsim_hdf5_basic.html
 
 import time as ttime
 
 import bluesky.plan_stubs as bps
 import databroker
+import hdf5plugin  # noqa F401
+from apstools.devices import CamMixin_V34, SingleTrigger_V34, ensure_AD_plugin_primed
 from bluesky import RunEngine
 from bluesky.callbacks.best_effort import BestEffortCallback
 from bluesky.plan_stubs import mv
@@ -16,24 +19,30 @@ from ophyd import (
     EpicsMotor,
     EpicsSignal,
     EpicsSignalRO,
-    SingleTrigger,
 )
-from ophyd.areadetector import cam
+from ophyd.areadetector import SimDetectorCam
 from ophyd.areadetector.filestore_mixins import FileStoreHDF5IterativeWrite
 from ophyd.areadetector.plugins import HDF5Plugin_V34
 
 
-class MyHDF5Plugin(FileStoreHDF5IterativeWrite, HDF5Plugin_V34):
+class SimDetectorCam_V34(CamMixin_V34, SimDetectorCam):
     ...
 
 
-class MyDetector(SingleTrigger, AreaDetector):
-    cam = ADComponent(cam.AreaDetectorCam, "CAM:")
+class MyHDF5Plugin(FileStoreHDF5IterativeWrite, HDF5Plugin_V34):
+    def stage(self):
+        self.stage_sigs.move_to_end("capture", last=True)
+        super().stage()
+
+
+class MyDetector(SingleTrigger_V34, AreaDetector):
+    cam = ADComponent(SimDetectorCam_V34, "CAM:")
     hdf1 = ADComponent(
         MyHDF5Plugin,
         "HDF1:",
         write_path_template="/out/%Y/%m/%d/",
-        read_path_template="/data/%Y/%m/%d/",  # Where bluesky container mount data
+        # read_path_template="/data/%Y/%m/%d/",  # Where bluesky container mount data
+        read_path_template="/home/bar/Projects/tomoscan/data/%Y/%m/%d/",  # Temporary path for local testing
     )
 
 
@@ -111,12 +120,23 @@ def passive_scan(detectors, motor, start, stop, steps, adStatus, pulse_ID):
 
 prefix = "ADT:USER1:"
 det = MyDetector(prefix, name="det")
+det.hdf1.kind = 3  # config | normal
 det.hdf1.create_directory.put(-5)
+
+# override default setting from ophyd
+det.hdf1.stage_sigs["blocking_callbacks"] = "No"
+det.cam.stage_sigs["wait_for_plugins"] = "Yes"
+
 det.hdf1.warmup()
 
 det.cam.stage_sigs["image_mode"] = "Multiple"
 det.cam.stage_sigs["acquire_time"] = 0.05
 det.cam.stage_sigs["num_images"] = 1
+# det.hdf1.stage_sigs["num_capture"] = 0  # capture ALL frames received
+# det.hdf1.stage_sigs["compression"] = "LZ4"
+
+# ensure_AD_plugin_primed(det.hdf1, True)
+
 
 motor1 = EpicsMotor("motorS:axis1", name="motor1")
 
