@@ -34,4 +34,4 @@ dbpf "ADT:USER1:CAM:ImageMode", "Single"
 
 dbpf "ADT:USER1:CAM:Noise", "5"
 
-dbpf "ADT:USER1:CAM:NDAttributesFile", "/repos/epics/ioc/config/detAttributes.xml"
+dbpf "ADT:USER1:CAM:NDAttributesFile", "/epics/ioc/config/detAttributes.xml"
