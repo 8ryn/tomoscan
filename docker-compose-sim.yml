@@ -5,6 +5,27 @@ volumes:
     name: tomoscan_mongodbdata
 
 services:
+  motor-sim:
+    image: sim-pmac
+    stop_signal: "SIGKILL"
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://localhost:12201" # This has to be the name of the gralog server from the host perspective
+        tag: "tomoscan-logs"
+  motor-ioc:
+    image: pmac-ioc
+    stdin_open: true
+    depends_on:
+      - motor-sim
+    stop_signal: "SIGKILL"
+    env_file:
+      - epics.env
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://localhost:12201" # This has to be the name of the gralog server from the host perspective
+        tag: "tomoscan-logs"
   areadetector:
     image: ad-ioc
     stdin_open: true

@@ -111,10 +111,10 @@ def passive_scan(detectors, motor, start, stop, steps, adStatus, pulse_ID):
 
 prefix = "TA1:CT_CAM:"
 det = MyDetector(prefix, name="det")
-det.hdf1.create_directory.put(-5)
-det.hdf1.warmup()
+#det.hdf1.create_directory.put(-5)
+#det.hdf1.warmup()
 
-det.hdf1.kind = 3  # config | normal, required to include images in run documents
+#det.hdf1.kind = 3  # config | normal, required to include images in run documents
 
 det.cam.stage_sigs["image_mode"] = "Multiple"
 det.cam.stage_sigs["acquire_time"] = 0.05
@@ -124,7 +124,7 @@ motor1 = EpicsMotor("TA1:SMC100:m1", name="motor1")
 
 # laser1 = MyLaser("laser:", name="laser1")
 laser1 = MyLaser("", name="laser1")
-laser1.wait_for_connection()
+#laser1.wait_for_connection()
 
 adStatus = EpicsSignalRO("TA1:CT_CAM:cam1:DetectorState_RBV", name="adStatus")
 pulse_ID = EpicsSignalRO("EPAC-DEV:PULSE:PULSE_ID", name="pulse_ID")
@@ -132,10 +132,10 @@ pulse_ID = EpicsSignalRO("EPAC-DEV:PULSE:PULSE_ID", name="pulse_ID")
 RE = RunEngine()
 
 bec = BestEffortCallback()
-# db = Broker.named("temp")  # This creates a temporary database
+#db = Broker.named("temp")  # This creates a temporary database
 # db = Broker.named("mongo")  # Connects to MongoDB database
-catalog = databroker.catalog["mongo"]
-# catalog = databroker.temp().v2
+#catalog = databroker.catalog["mongo"]
+catalog = databroker.temp().v2
 
 # Send all metadata/data captured to the BestEffortCallback.
 RE.subscribe(bec)
