@@ -29,12 +29,12 @@ class MyHDF5Plugin(FileStoreHDF5IterativeWrite, HDF5Plugin_V34):
 
 class MyDetector(SingleTrigger, AreaDetector):
     cam = ADComponent(cam.AreaDetectorCam, "cam1:")
-    hdf1 = ADComponent(
-        MyHDF5Plugin,
-        "HDF1:",
-        write_path_template="/out/%Y/%m/%d/",
-        read_path_template="/out/%Y/%m/%d/",  # Where bluesky container mount data
-    )
+    # hdf1 = ADComponent(
+    #    MyHDF5Plugin,
+    #    "HDF1:",
+    #    write_path_template="/out/%Y/%m/%d/",
+    #    read_path_template="/out/%Y/%m/%d/",  # Where bluesky container mount data
+    # )
 
 
 class MyLaser(Device):
