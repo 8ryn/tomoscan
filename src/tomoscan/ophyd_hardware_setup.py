@@ -117,7 +117,7 @@ det = MyDetector(prefix, name="det")
 # det.hdf1.kind = 3  # config | normal, required to include images in run documents
 
 det.cam.stage_sigs["image_mode"] = "Multiple"
-det.cam.stage_sigs["acquire_time"] = 0.05
+det.cam.stage_sigs["acquire_time"] = 0.005
 det.cam.stage_sigs["num_images"] = 1
 
 motor1 = EpicsMotor("TA1:SMC100:m1", name="motor1")
