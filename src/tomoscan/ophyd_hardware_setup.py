@@ -73,7 +73,7 @@ def pulse_sync(detectors, motor, laser, start, stop, steps):
     for i in range(steps):
         yield from bps.checkpoint()  # allows pausing/rewinding
         yield from mv(motor, start + i * step_size)
-        currentPulse = laser.pulse_id.read
+        currentPulse = laser.pulse_id.get()
         yield from wait_for_value(
             laser.pulse_id, currentPulse + 1, poll_time=0.001, timeout=10
         )
