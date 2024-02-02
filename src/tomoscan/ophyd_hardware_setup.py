@@ -73,10 +73,10 @@ def pulse_sync(detectors, motor, laser, start, stop, steps):
     for i in range(steps):
         yield from bps.checkpoint()  # allows pausing/rewinding
         yield from mv(motor, start + i * step_size)
+        currentPulse = laser.pulse_id.read
         yield from wait_for_value(
-            laser.power, 0, poll_time=0.01, timeout=10
-        )  # Want to be at 0 initially such that image taken on pulse
-        yield from wait_for_value(laser.power, 1, poll_time=0.001, timeout=10)
+            laser.pulse_id, currentPulse + 1, poll_time=0.001, timeout=10
+        )
         yield from bps.trigger_and_read(list(detectors) + [motor] + [laser])
     yield from bps.close_run()
 
