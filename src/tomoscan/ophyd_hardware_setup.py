@@ -29,12 +29,13 @@ class MyHDF5Plugin(FileStoreHDF5IterativeWrite, HDF5Plugin_V34):
 
 class MyDetector(SingleTrigger, AreaDetector):
     cam = ADComponent(cam.AreaDetectorCam, "cam1:")
-    # hdf1 = ADComponent(
-    #    MyHDF5Plugin,
-    #    "HDF1:",
-    #    write_path_template="/out/%Y/%m/%d/",
-    #    read_path_template="/out/%Y/%m/%d/",  # Where bluesky container mount data
-    # )
+    hdf1 = ADComponent(
+        MyHDF5Plugin,
+        "HDF:",
+        write_path_template ="/home/brw82791/out/%Y/%m/%d/",
+        read_path_template="/home/brw82791/adOut/%Y/%m/%d/",
+
+     )
 
 
 class MyLaser(Device):
@@ -111,14 +112,16 @@ def passive_scan(detectors, motor, start, stop, steps, adStatus, pulse_ID):
 
 prefix = "TA1:CT_CAM:"
 det = MyDetector(prefix, name="det")
-# det.hdf1.create_directory.put(-5)
-# det.hdf1.warmup()
+det.hdf1.create_directory.put(-5)
+#det.hdf1.warmup()
 
-# det.hdf1.kind = 3  # config | normal, required to include images in run documents
+det.hdf1.kind = 3  # config | normal, required to include images in run documents
 
 det.cam.stage_sigs["image_mode"] = "Multiple"
 det.cam.stage_sigs["acquire_time"] = 0.005
 det.cam.stage_sigs["num_images"] = 1
+
+#det.hdf1.warmup()
 
 motor1 = EpicsMotor("TA1:SMC100:m1", name="motor1")
 
@@ -134,8 +137,8 @@ RE = RunEngine()
 bec = BestEffortCallback()
 # db = Broker.named("temp")  # This creates a temporary database
 # db = Broker.named("mongo")  # Connects to MongoDB database
-# catalog = databroker.catalog["mongo"]
-catalog = databroker.temp().v2
+catalog = databroker.catalog["mongo"]
+#catalog = databroker.temp().v2
 
 # Send all metadata/data captured to the BestEffortCallback.
 RE.subscribe(bec)

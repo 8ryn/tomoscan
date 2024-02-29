@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--Saved on 2024-02-28 17:26:55 by brw82791-->
 <display version="2.0.0">
   <name>commonPlugins</name>
   <x>337</x>
@@ -249,6 +250,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #55</name>
@@ -1861,6 +1863,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #362</name>
@@ -1907,6 +1910,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #369</name>
@@ -1953,6 +1957,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #376</name>
@@ -1999,6 +2004,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #383</name>
@@ -2045,6 +2051,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #390</name>
@@ -2091,6 +2098,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #397</name>
@@ -2137,6 +2145,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #404</name>
@@ -2183,6 +2192,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #411</name>
@@ -2229,6 +2239,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #418</name>
@@ -2275,6 +2286,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #425</name>
@@ -2321,6 +2333,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #432</name>
@@ -2367,6 +2380,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #439</name>
@@ -2413,6 +2427,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #446</name>
@@ -3185,6 +3200,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #579</name>
@@ -3393,6 +3409,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #616</name>
@@ -3601,6 +3618,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #653</name>
@@ -3809,6 +3827,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #690</name>
@@ -4017,6 +4036,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #727</name>
@@ -4241,6 +4261,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #765</name>
@@ -4450,6 +4471,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #802</name>
@@ -4658,6 +4680,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #839</name>
@@ -4866,6 +4889,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #876</name>
@@ -5535,6 +5559,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #1001</name>
@@ -5582,6 +5607,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #1008</name>
@@ -5629,6 +5655,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #1015</name>
@@ -5676,6 +5703,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #1022</name>
@@ -5723,6 +5751,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #1029</name>
@@ -5985,7 +6014,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #1073</name>
-    <pv_name>$(P)HDF1:PortName_RBV</pv_name>
+    <pv_name>$(P)HDF:PortName_RBV</pv_name>
     <x>10</x>
     <y>821</y>
     <width>110</width>
@@ -6009,7 +6038,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #1077</name>
-    <pv_name>$(P)HDF1:PluginType_RBV</pv_name>
+    <pv_name>$(P)HDF:PluginType_RBV</pv_name>
     <x>125</x>
     <y>821</y>
     <width>160</width>
@@ -6033,7 +6062,7 @@
   </widget>
   <widget type="textentry" version="3.0.0">
     <name>text entry #1081</name>
-    <pv_name>$(P)HDF1:NDArrayPort</pv_name>
+    <pv_name>$(P)HDF:NDArrayPort</pv_name>
     <x>290</x>
     <y>820</y>
     <width>60</width>
@@ -6051,7 +6080,7 @@
   </widget>
   <widget type="combo" version="2.0.0">
     <name>menu #1085</name>
-    <pv_name>$(P)HDF1:EnableCallbacks</pv_name>
+    <pv_name>$(P)HDF:EnableCallbacks</pv_name>
     <x>355</x>
     <y>820</y>
     <width>80</width>
@@ -6064,7 +6093,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #1088</name>
-    <pv_name>$(P)HDF1:EnableCallbacks_RBV</pv_name>
+    <pv_name>$(P)HDF:EnableCallbacks_RBV</pv_name>
     <x>440</x>
     <y>821</y>
     <width>80</width>
@@ -6087,7 +6116,7 @@
   </widget>
   <widget type="combo" version="2.0.0">
     <name>menu #1092</name>
-    <pv_name>$(P)HDF1:BlockingCallbacks</pv_name>
+    <pv_name>$(P)HDF:BlockingCallbacks</pv_name>
     <x>525</x>
     <y>820</y>
     <width>80</width>
@@ -6105,10 +6134,10 @@
         <file>NDFileHDF5.opi</file>
         <macros>
           <EXT>h5</EXT>
-          <R>HDF1:</R>
+          <R>HDF:</R>
         </macros>
         <target>tab</target>
-        <description>HDF1:</description>
+        <description>HDF:</description>
       </action>
     </actions>
     <text>More</text>
@@ -6120,10 +6149,11 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #1098</name>
-    <pv_name>$(P)HDF1:ArrayRate_RBV</pv_name>
+    <pv_name>$(P)HDF:ArrayRate_RBV</pv_name>
     <x>780</x>
     <y>821</y>
     <width>80</width>
@@ -6147,7 +6177,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #1102</name>
-    <pv_name>$(P)HDF1:QueueFree</pv_name>
+    <pv_name>$(P)HDF:QueueFree</pv_name>
     <x>695</x>
     <y>821</y>
     <width>80</width>
@@ -6170,7 +6200,7 @@
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #1106</name>
-    <pv_name>$(P)HDF1:DroppedArrays_RBV</pv_name>
+    <pv_name>$(P)HDF:DroppedArrays_RBV</pv_name>
     <x>610</x>
     <y>821</y>
     <width>80</width>
@@ -6328,6 +6358,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #1135</name>
@@ -6536,6 +6567,7 @@
       <color red="115" green="223" blue="255">
       </color>
     </background_color>
+    <tooltip>$(actions)</tooltip>
   </widget>
   <widget type="textupdate" version="2.0.0">
     <name>text update #1172</name>

@@ -3,7 +3,7 @@ metadatastore:
     module: "databroker.headersource.mongo"
     class: "MDS"
     config:
-        host: "mongo-db"
+        host: "0.0.0.0"
         port: 27017
         database: "bluesky_database"
         timezone: "UK"
@@ -11,6 +11,6 @@ assets:
     module: "databroker.assets.mongo"
     class: "Registry"
     config:
-        host: "mongo-db"
+        host: "0.0.0.0"
         port: 27017
         database: "bluesky_database"
