@@ -23,8 +23,7 @@ from ophyd.areadetector.filestore_mixins import FileStoreHDF5IterativeWrite
 from ophyd.areadetector.plugins import HDF5Plugin_V34
 
 
-class MyHDF5Plugin(FileStoreHDF5IterativeWrite, HDF5Plugin_V34):
-    ...
+class MyHDF5Plugin(FileStoreHDF5IterativeWrite, HDF5Plugin_V34): ...
 
 
 class MyDetector(SingleTrigger, AreaDetector):
@@ -60,6 +59,25 @@ def wait_for_value(signal: EpicsSignal, value, poll_time=0.01, timeout=10):
                 % (signal, value, timeout)
             )
         current_value = signal.get()
+
+
+# Custom plan to move motor and then take multiple images
+def multi_scan(detectors, motor, laser, start, stop, steps, repeats=1):
+    step_size = (stop - start) / (steps - 1)
+
+    for det in detectors:
+        yield from bps.stage(det)
+
+    yield from bps.open_run()
+    for i in range(steps):
+        yield from bps.checkpoint()  # allows pausing/rewinding
+        yield from mv(motor, start + i * step_size)
+        for j in range(repeats):
+            yield from bps.trigger_and_read(list(detectors) + [motor] + [laser])
+    yield from bps.close_run()
+
+    for det in detectors:
+        yield from bps.unstage(det)
 
 
 # Custom plan to move motor and then wait for laser pulse to take reading
