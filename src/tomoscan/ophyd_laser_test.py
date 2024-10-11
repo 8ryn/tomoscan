@@ -17,12 +17,15 @@ from ophyd import (
     EpicsSignal,
     EpicsSignalRO,
     SingleTrigger,
+    DeviceStatus
 )
+from ophyd.utils import doc_annotation_forwarder
 from ophyd.areadetector import cam
 from ophyd.areadetector.filestore_mixins import FileStoreHDF5IterativeWrite
 from ophyd.areadetector.plugins import HDF5Plugin_V34
 
 from functools import partial
+from threading import Lock
 
 
 class MyHDF5Plugin(FileStoreHDF5IterativeWrite, HDF5Plugin_V34): ...
@@ -33,13 +36,71 @@ class MyDetector(SingleTrigger, AreaDetector):
     hdf1 = ADComponent(
         MyHDF5Plugin,
         "HDF:",
-        write_path_template="/home/brw82791/out/%Y/%m/%d/",
-        read_path_template="/home/brw82791/adOut/%Y/%m/%d/",
+        write_path_template="/home/sfd73252/out/%Y/%m/%d/",
+        read_path_template="/home/sfd73252/adOut/%Y/%m/%d/",
     )
 
 
 class MyLaser(Device):
     pulse_id = Component(EpicsSignalRO, "TA1:PULSE_ID", name="pulse_id", kind="hinted")
+
+class EPACLaser(Device):
+    """Interface to EPAC laser control and pulse ID systems
+
+    This will provide various signals associated with the state of the laser,
+    but its main use is recording pulse IDs and synchronising data acquisition
+    with laser pulses.
+
+    When `trigger()` is called, the status object returned will complete
+    immediately after the next laser pulse. The `pulse_id` signal will then
+    contain the ID of that pulse. Therefore, any scan using this device as a
+    detector will wait for a single laser pulse whenever it attempts to record
+    data and it will record the ID of that laser pulse. This can then be used to
+    identify which data must be recorded from Kafka.
+
+    Arguments:
+     - `pulse_id_delay`: float (keyword-only) - the delay in seconds between the
+       pulse ID PV updating and the laser pulse happening
+
+    Keyword arguments for `ophyd.Device` are also accepted.
+    """
+
+    pulse_id = Component(
+        # Question: how should we be handling the PV names here?
+        # AIUI, EPAC has no global prefix. The PVs we'll need to access may be
+        # all over the place, so have no common prefix. So it seems like we'll
+        # have to use the full names here.
+        #
+        # However, that makes it difficult to work in an environment that
+        # doesn't use exactly the right names. The alternative is more
+        # constructor arguments and using ophyd.FormattedComponent
+        EpicsSignalRO,
+        "PULSE_ID",
+        name="pulse_id",
+        kind="hinted",
+    )
+
+    def __init__(self, *, pulse_id_delay: float = 0.0, prefix: str = "EPAC-DEV:PULSE:",  **kwargs):
+        super().__init__(prefix, **kwargs)
+        self.__pending_status_list: list[DeviceStatus] = []
+        self.__pending_status_lock = Lock()
+        self.pulse_id_delay = pulse_id_delay
+        self.pulse_id.subscribe(self.__pulse_id_cb, run=False)
+
+    def __pulse_id_cb(self, **kwargs) -> None:
+        with self.__pending_status_lock:
+            pending_status_list = self.__pending_status_list
+            self.__pending_status_list = []
+        for s in pending_status_list:
+            s.set_finished()
+
+    @doc_annotation_forwarder(Device)
+    def trigger(self) -> DeviceStatus:
+        status = DeviceStatus(self, timeout=2.0, settle_time=self.pulse_id_delay)
+        with self.__pending_status_lock:
+            self.__pending_status_list.append(status)
+
+        return status
 
 
 # Heavily influenced by _wait_for_value function in epics_pvs.py, does block
@@ -111,7 +172,8 @@ def passive_scan(detectors, motor, start, stop, steps, adStatus, pulse_ID):
     yield from bps.close_run()
 
 
-prefix = "TA1:CT_CAM:"
+#prefix = "TA1:CT_CAM:"
+prefix = "TA1:CAM2:"
 det = MyDetector(prefix, name="det")
 det.hdf1.create_directory.put(-5)
 
@@ -124,10 +186,11 @@ det.cam.stage_sigs["num_images"] = 1
 motor1 = EpicsMotor("TA1:SMC100:m1", name="motor1")
 
 # laser1 = MyLaser("laser:", name="laser1")
-laser1 = MyLaser("", name="laser1")
+#laser1 = MyLaser("", name="laser1")
+laser1 = EPACLaser(prefix="TA1:" ,name="laser1")
 laser1.wait_for_connection()
 
-adStatus = EpicsSignalRO("TA1:CT_CAM:cam1:DetectorState_RBV", name="adStatus")
+#adStatus = EpicsSignalRO("TA1:CT_CAM:cam1:DetectorState_RBV", name="adStatus")
 pulse_ID = EpicsSignalRO("TA1:PULSE_ID", name="pulse_ID")
 
 RE = RunEngine()

@@ -22,24 +22,31 @@ from ophyd.areadetector import cam
 from ophyd.areadetector.filestore_mixins import FileStoreHDF5IterativeWrite
 from ophyd.areadetector.plugins import HDF5Plugin_V34
 
-from functools import partial
+from ophyd.sim import det,motor
 
 
-class MyHDF5Plugin(FileStoreHDF5IterativeWrite, HDF5Plugin_V34): ...
+class MyHDF5Plugin(FileStoreHDF5IterativeWrite, HDF5Plugin_V34):
+    ...
 
 
 class MyDetector(SingleTrigger, AreaDetector):
-    cam = ADComponent(cam.AreaDetectorCam, "cam1:")
+    cam = ADComponent(cam.AreaDetectorCam, "CAM:")
     hdf1 = ADComponent(
         MyHDF5Plugin,
-        "HDF:",
-        write_path_template="/home/brw82791/out/%Y/%m/%d/",
-        read_path_template="/home/brw82791/adOut/%Y/%m/%d/",
-    )
+        "HDF1:",
+        write_path_template="/out/%Y/%m/%d/",
+        read_path_template="/out/%Y/%m/%d/",  # Where bluesky container mount data
+     )
 
 
 class MyLaser(Device):
-    pulse_id = Component(EpicsSignalRO, "TA1:PULSE_ID", name="pulse_id", kind="hinted")
+    # power = Component(EpicsSignalRO, "laser:power")
+    pulse_id = Component(EpicsSignalRO, "TA1:PULSE_ID", name="pulse_id")
+
+
+#   Legacy laser variables for when laser is not set by pulse-id-gen
+#    pulse_id = Component(EpicsSignalRO, "pulse_id")
+#    freq = Component(EpicsSignalRO, "freq", kind="config")
 
 
 # Heavily influenced by _wait_for_value function in epics_pvs.py, does block
@@ -57,8 +64,8 @@ def wait_for_value(signal: EpicsSignal, value, poll_time=0.01, timeout=10):
         current_value = signal.get()
 
 
-# Custom plan to move motor and then take multiple images
-def multi_scan(detectors, motor, laser, start, stop, steps, repeats=1):
+# Custom plan to move motor and then wait for laser pulse to take reading
+def pulse_sync(detectors, motor, laser, start, stop, steps):
     step_size = (stop - start) / (steps - 1)
 
     for det in detectors:
@@ -68,26 +75,19 @@ def multi_scan(detectors, motor, laser, start, stop, steps, repeats=1):
     for i in range(steps):
         yield from bps.checkpoint()  # allows pausing/rewinding
         yield from mv(motor, start + i * step_size)
-        for j in range(repeats):
-            yield from bps.trigger_and_read(list(detectors) + [laser] + [motor])
+        currentPulse = laser.pulse_id.get()
+        yield from wait_for_value(
+            laser.pulse_id, currentPulse + 1, poll_time=0.001, timeout=10
+        )
+        yield from bps.trigger_and_read(list(detectors) + [motor] + [laser])
     yield from bps.close_run()
 
     for det in detectors:
         yield from bps.unstage(det)
-        
-def repeating_step(detectors, step, pos_cache, take_reading=None, repeats=1):
-    """
-    Customised version of the default one_nd_step function which repeats the reading a number of times
-    """
-    take_reading = bps.trigger_and_read if take_reading is None else take_reading
-    motors = step.keys()
-    yield from bps.move_per_step(step, pos_cache)
-    for i in range(repeats):
-        yield from take_reading(list(detectors) + list(motors))
 
 
 # Custom plan to move motor based on detector status
-# designed for when detector is being triggered continuously outside of bluesky
+# designed for when detector is being triggered outside of bluesky
 def passive_scan(detectors, motor, start, stop, steps, adStatus, pulse_ID):
     step_size = (stop - start) / (steps - 1)
 
@@ -111,29 +111,34 @@ def passive_scan(detectors, motor, start, stop, steps, adStatus, pulse_ID):
     yield from bps.close_run()
 
 
-prefix = "TA1:CT_CAM:"
-det = MyDetector(prefix, name="det")
-det.hdf1.create_directory.put(-5)
+#prefix = "ADT:USER1:"
+#det = MyDetector(prefix, name="det")
+#print("det object created")
+#det.hdf1.create_directory.put(-5)
+#print("det directories created")
+#det.hdf1.warmup()
 
-det.hdf1.kind = 3  # config | normal, required to include images in run documents
+#det.hdf1.kind = 3  # config | normal, required to include images in run documents
 
-det.cam.stage_sigs["image_mode"] = "Multiple"
-det.cam.stage_sigs["acquire_time"] = 0.01
-det.cam.stage_sigs["num_images"] = 1
+#det.cam.stage_sigs["image_mode"] = "Multiple"
+#det.cam.stage_sigs["acquire_time"] = 0.005
+#det.cam.stage_sigs["num_images"] = 1
 
-motor1 = EpicsMotor("TA1:SMC100:m1", name="motor1")
+#motor1 = EpicsMotor("TA1:SMC100:m1", name="motor1")
 
-# laser1 = MyLaser("laser:", name="laser1")
-laser1 = MyLaser("", name="laser1")
-laser1.wait_for_connection()
+#laser1 = MyLaser("", name="laser1")
+#laser1.wait_for_connection()
 
-adStatus = EpicsSignalRO("TA1:CT_CAM:cam1:DetectorState_RBV", name="adStatus")
-pulse_ID = EpicsSignalRO("TA1:PULSE_ID", name="pulse_ID")
+#adStatus = EpicsSignalRO("TA1:CT_CAM:cam1:DetectorState_RBV", name="adStatus")
+#pulse_ID = EpicsSignalRO("TA1:PULSE_ID", name="pulse_ID")
 
 RE = RunEngine()
 
 bec = BestEffortCallback()
-catalog = databroker.catalog["mongo"]  # Connects to MongoDB database
+# db = Broker.named("temp")  # This creates a temporary database
+# db = Broker.named("mongo")  # Connects to MongoDB database
+catalog = databroker.catalog["mongo"]
+#catalog = databroker.temp().v2
 
 # Send all metadata/data captured to the BestEffortCallback.
 RE.subscribe(bec)
@@ -141,8 +146,9 @@ RE.subscribe(bec)
 RE.subscribe(catalog.v1.insert)
 
 
-# Example of how to run a scan between 0 and 180 in 5 steps:
-# RE(scan([det,laser1], motor1, 0, 180, 5))
+# Examples of how to run both scans:
+# uids = RE(pulse_sync([det], motor1, laser1, -10, 10, 11))
+# uids = RE(passive_scan([det], motor1, -10, 10, 11, adStatus , pulse_ID))
 
 # Take a look at the data from the run
 # run = catalog.v2[uids[0]]
