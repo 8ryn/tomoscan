@@ -5,7 +5,7 @@
 
 ##### runtime stage ############################################################
 
-FROM ghcr.io/epics-containers/ioc-pmac-linux-runtime:23.5.1 AS runtime
+FROM ghcr.io/epics-containers/ioc-pmac-runtime:2024.9.1 AS runtime
 
 #copy config folder
 COPY config ${IOC}/config

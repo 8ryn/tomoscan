@@ -1,6 +1,6 @@
 ##### runtime stage ############################################################
 
-FROM ghcr.io/epics-containers/ioc-adsimdetector-linux-runtime:2023.11.2 AS runtime
+FROM ghcr.io/epics-containers/ioc-adsimdetector-runtime:2024.9.1 AS runtime
 
 #copy config folder
 COPY config ${IOC}/config
